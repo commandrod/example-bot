@@ -10,7 +10,7 @@ export default class CommandRegister implements Listener {
   type: keyof ClientEvents = 'messageCreate';
   once: boolean = false;
 
-  async on(client: Client<boolean>, ...args: any[]): Promise<void> {
+  async run(client: Client<boolean>, ...args: any[]): Promise<void> {
     const msg: Message = args[0];
     if (!msg) return;
     const { channel, content, member } = msg;

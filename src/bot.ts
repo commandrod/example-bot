@@ -58,7 +58,7 @@ function addListener(listener: Listener) {
 }
 
 async function passArgs(listener: Listener, ...args: any[]): Promise<void> {
-  return await listener.on(bot, args[0][0]);
+  return await listener.run(bot, args[0][0]);
 }
 
 export function getCommand(name: string): Command | undefined {
