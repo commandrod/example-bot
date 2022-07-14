@@ -25,7 +25,7 @@ export function getChannel(guild: Guild, id: string): TextChannel | null {
 }
 
 export function isBetween(given: number | undefined, min: number, max: number, channel?: SendabaleChannel): boolean {
-  const errorMsg = error(`אנא ציינו מספר חיובי בין ${min}-${max}!`);
+  const errorMsg = error(`You must specify a number between ${min}-${max}!`);
   if (!given) {
     if (channel) sendEmbed(channel, errorMsg);
     return false;

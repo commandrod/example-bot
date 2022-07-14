@@ -23,7 +23,7 @@ export default class CommandRegister implements Listener {
     const { permission } = command;
     if (!member) return;
     if (!member.permissions.has(getPermission(permission))) {
-      await sendEmbed(channel, error('אין לך גישה לפקודה זו!', member.user));
+      await sendEmbed(channel, error('Insufficient permissions!', member.user));
       return;
     }
     await command.run(msg, commandArgs, client);
