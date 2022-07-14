@@ -1,0 +1,9 @@
+# libraries
+node_modules/
+
+# build
+out/
+
+# yarn
+yarn.lock
+yarn-error.log
