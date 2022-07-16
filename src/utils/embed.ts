@@ -35,7 +35,7 @@ export function embed(options: EmbedOptions): MessageEmbed {
 }
 
 export function error(description: string, author?: User): MessageEmbed {
-  return embed({ title: '❗ | Error', color: 0xdb0012, description, author, fields: undefined });
+  return embed({ title: '❗ | Error', color: 0xdb0012, description, author });
 }
 
 export async function log(guild: Guild, description: string, author?: User): Promise<void> {
