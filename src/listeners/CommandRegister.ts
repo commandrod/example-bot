@@ -1,4 +1,4 @@
-import { Client, ClientEvents, Message, PermissionString } from "discord.js";
+import { Client, ClientEvents, Message, PermissionResolvable } from "discord.js";
 import Command from "../api/Command";
 import Listener from "../api/Listener";
 import { PermissionType } from "../api/PermissionType";
@@ -31,10 +31,10 @@ export default class CommandRegister implements Listener {
   }
 }
 
-function getPermission(permission: PermissionType): PermissionString {
+function getPermission(permission: PermissionType): PermissionResolvable {
   switch (permission) {
-    case "HIGH": return "ADMINISTRATOR";
-    case "STAFF": return "MANAGE_MESSAGES";
+    case "HIGH": return "Administrator";
+    case "STAFF": return "ManageMessages";
   }
-  return "SEND_MESSAGES";
+  return "SendMessages";
 }

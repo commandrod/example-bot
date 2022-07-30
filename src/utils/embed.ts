@@ -1,5 +1,5 @@
 import { EmbedFooterData } from "@discordjs/builders";
-import { ColorResolvable, DMChannel, EmbedFieldData, Guild, Message, MessageEmbed, NewsChannel, PartialDMChannel, TextChannel, ThreadChannel, User, VoiceChannel } from "discord.js";
+import { ColorResolvable, DMChannel, EmbedBuilder, EmbedField, Guild, Message, NewsChannel, PartialDMChannel, TextChannel, ThreadChannel, User, VoiceChannel } from "discord.js";
 import { LOG_CHANNEL } from "../config.json";
 import { getChannel } from "./utils";
 
@@ -8,7 +8,7 @@ export type EmbedOptions = {
   color?: ColorResolvable,
   description?: string,
   author?: User,
-  fields?: EmbedFieldData[],
+  fields?: EmbedField[],
   footer?: EmbedFooterData,
   image?: string,
   time?: boolean
@@ -16,13 +16,13 @@ export type EmbedOptions = {
 
 export type SendabaleChannel = DMChannel | PartialDMChannel | NewsChannel | TextChannel | ThreadChannel | VoiceChannel;
 
-export async function sendEmbed(channel: SendabaleChannel, embed: MessageEmbed): Promise<Message> {
+export async function sendEmbed(channel: SendabaleChannel, embed: EmbedBuilder): Promise<Message> {
   return await channel.send({ embeds: [embed] });
 }
 
-export function embed(options: EmbedOptions): MessageEmbed {
+export function embed(options: EmbedOptions): EmbedBuilder {
   const { title, color, description, author, fields, footer, image, time } = options;
-  const embed: MessageEmbed = new MessageEmbed()
+  const embed: EmbedBuilder = new EmbedBuilder()
     .setTitle(title ? `**${title}**` : '✅ | Embed')
     .setColor(color ?? 0x24f2c6)
     .setDescription(description ?? '')
@@ -34,7 +34,7 @@ export function embed(options: EmbedOptions): MessageEmbed {
   return embed;
 }
 
-export function error(description: string, author?: User): MessageEmbed {
+export function error(description: string, author?: User): EmbedBuilder {
   return embed({ title: '❗ | Error', color: 0xdb0012, description, author });
 }
 

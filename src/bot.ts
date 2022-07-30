@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import { ActivityType, Client } from 'discord.js';
 import Command from './api/Command';
 import Listener from './api/Listener';
 import CommandListCommand from './commands/CommandList';
@@ -6,8 +6,7 @@ import { TOKEN } from "./config.json";
 import CommandRegister from './listeners/CommandRegister';
 
 export const bot: Client = new Client({
-  intents: ['GUILDS', 'GUILD_MESSAGES'],
-  partials: ['MESSAGE', 'CHANNEL']
+  intents: ['Guilds', 'GuildMessages']
 });
 
 const commands: Map<string, Command> = new Map<string, Command>;
@@ -22,7 +21,7 @@ bot.once('ready', () => {
   let members;
   bot.guilds.cache.forEach(guild => members = + guild.memberCount);
   const servers = bot.guilds.cache.filter(guild => guild != null).size;
-  user.setActivity({ type: 'WATCHING', name: `${members} members in ${servers} servers` });
+  user.setActivity({ type: ActivityType.Watching, name: `${members} members in ${servers} servers` });
 
   registerCommands();
   registerListeners();
