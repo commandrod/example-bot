@@ -6,7 +6,7 @@ import { TOKEN } from "./config.json";
 import CommandRegister from './listeners/CommandRegister';
 
 export const bot: Client = new Client({
-  intents: ['Guilds', 'GuildMessages']
+  intents: ['Guilds', 'GuildMessages', 'MessageContent'] // Make sure to enable MessageContent intents in the developer portal!
 });
 
 const commands: Map<string, Command> = new Map<string, Command>;

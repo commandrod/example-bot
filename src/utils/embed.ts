@@ -1,7 +1,7 @@
 import { EmbedFooterData } from "@discordjs/builders";
 import { ColorResolvable, DMChannel, EmbedBuilder, EmbedField, Guild, Message, NewsChannel, PartialDMChannel, TextChannel, ThreadChannel, User, VoiceChannel } from "discord.js";
 import { LOG_CHANNEL } from "../config.json";
-import { getChannel } from "./utils";
+import { getTextChannel } from "./utils";
 
 export type EmbedOptions = {
   title?: string,
@@ -26,9 +26,10 @@ export function embed(options: EmbedOptions): EmbedBuilder {
     .setTitle(title ? `**${title}**` : '✅ | Embed')
     .setColor(color ?? 0x24f2c6)
     .setDescription(description ?? '')
-    .setFooter(footer ?? { text: '' })
-    .setThumbnail(image ?? '');
-  if (author) embed.setFooter({ text: `Sent by ${author.tag}`, iconURL: author.displayAvatarURL() ?? '' });
+  if (image) embed.setThumbnail(image)
+  const avatarURL = author?.avatarURL();
+  if (author && avatarURL) embed.setFooter({ text: `Requested by ${author.tag}`, iconURL: avatarURL });
+  if (footer) embed.setFooter(footer);
   if (fields) embed.addFields(fields);
   if (time) embed.setTimestamp(Date.now());
   return embed;
@@ -39,7 +40,7 @@ export function error(description: string, author?: User): EmbedBuilder {
 }
 
 export async function log(guild: Guild, description: string, author?: User): Promise<void> {
-  const channel = getChannel(guild, LOG_CHANNEL);
+  const channel = getTextChannel(guild, LOG_CHANNEL);
   if (!channel) {
     console.log('Log channel is null!');
     return;

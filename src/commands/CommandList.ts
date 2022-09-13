@@ -13,7 +13,8 @@ export default class CommandListCommand implements Command {
   description: string = 'Shows all existing commands';
   permission: PermissionType = "NONE";
   usage: string = '[command]';
-  commands: Map<string, Command>;
+
+  private readonly commands: Map<string, Command>;
 
   public constructor(commands: Map<string, Command>) {
     this.commands = commands;
