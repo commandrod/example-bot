@@ -1,15 +1,14 @@
 import { ActivityType, Client } from 'discord.js';
+import { readdirSync } from "node:fs";
 import Command from './api/Command';
 import Listener from './api/Listener';
-import CommandListCommand from './commands/CommandList';
 import { TOKEN } from "./config.json";
-import CommandRegister from './listeners/CommandRegister';
 
 export const bot: Client = new Client({
   intents: ['Guilds', 'GuildMessages', 'MessageContent'] // Make sure to enable MessageContent intents in the developer portal!
 });
 
-const commands: Map<string, Command> = new Map<string, Command>;
+export const commands: Map<string, Command> = new Map<string, Command>;
 const commandAliases: Map<string, Command> = new Map<string, Command>;
 const listeners: Listener[] = [];
 
@@ -27,20 +26,21 @@ bot.once('ready', () => {
   registerListeners();
 });
 
-const registerCommands = () => {
-  addCommand(new CommandListCommand(commands));
+function register(path: string, method: Function) {
+  const dirname = `${__dirname}/${path}`
+  const cmdFiles = readdirSync(dirname);
+  for (const file of cmdFiles) {
+    const fileClass = require(`${dirname}/${file}`).default;
+    const instance = new fileClass();
+    method(instance);
+  }
 }
 
-const registerListeners = () => {
-  addListener(new CommandRegister());
-}
+const registerCommands = () => register('commands', addCommand);
+const registerListeners = () => register('listeners', addListener);
 
 function addCommand(command: Command) {
-  const names: string[] = [];
-  for (const alias of command.aliases) {
-    names.push(alias);
-  }
-  names.push(command.name);
+  const names: string[] = [...command.aliases, ...command.name];
   for (const name of names) {
     commandAliases.set(name, command);
   }
@@ -49,11 +49,13 @@ function addCommand(command: Command) {
 
 function addListener(listener: Listener) {
   listeners.push(listener);
+  const type = listener.type;
+
   if (listener.once) {
-    bot.once(listener.type, async (...args: any[]) => await passArgs(listener, args));
+    bot.once(type, async (...args: any[]) => await passArgs(listener, args));
     return;
   }
-  bot.on(listener.type, async (...args: any[]) => await passArgs(listener, args));
+  bot.on(type, async (...args: any[]) => await passArgs(listener, args));
 }
 
 async function passArgs(listener: Listener, ...args: any[]): Promise<void> {
