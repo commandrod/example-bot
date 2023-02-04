@@ -12,7 +12,7 @@ export const commands: Map<string, Command> = new Map<string, Command>;
 const commandAliases: Map<string, Command> = new Map<string, Command>;
 const listeners: Listener[] = [];
 
-bot.once('ready', () => {
+bot.once('ready', async () => {
   const user = bot.user;
   if (!user) return;
   console.log(`Logged in as ${user.tag}!`);
@@ -22,22 +22,22 @@ bot.once('ready', () => {
   const servers = bot.guilds.cache.filter(guild => guild != null).size;
   user.setActivity({ type: ActivityType.Watching, name: `${members} members in ${servers} servers` });
 
-  registerCommands();
-  registerListeners();
+  await registerCommands();
+  await registerListeners();
 });
 
-function register(path: string, method: Function) {
+async function register(path: string, method: Function) {
   const dirname = `${__dirname}/${path}`
   const cmdFiles = readdirSync(dirname);
   for (const file of cmdFiles) {
-    const fileClass = require(`${dirname}/${file}`).default;
+    const fileClass = await import(`${dirname}/${file}`);
     const instance = new fileClass();
     method(instance);
   }
 }
 
-const registerCommands = () => register('commands', addCommand);
-const registerListeners = () => register('listeners', addListener);
+const registerCommands = async () => await register('commands', addCommand);
+const registerListeners = async () => await register('listeners', addListener);
 
 function addCommand(command: Command) {
   const names: string[] = [...command.aliases, ...command.name];
