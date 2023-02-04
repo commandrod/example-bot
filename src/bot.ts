@@ -30,7 +30,7 @@ async function register(path: string, method: Function) {
   const dirname = `${__dirname}/${path}`
   const cmdFiles = readdirSync(dirname);
   for (const file of cmdFiles) {
-    const fileClass = await import(`${dirname}/${file}`);
+    const fileClass = (await import(`${dirname}/${file}`)).default;
     const instance = new fileClass();
     method(instance);
   }
